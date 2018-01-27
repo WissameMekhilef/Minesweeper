@@ -1,0 +1,350 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{fancyvrb} % pour mettre les verbatim dans des boites
+%\usepackage[dvipdf]{graphics}
+\usepackage[pdftex]{graphicx}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{listingsutf8}
+%\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+
+% Quelques réglages particuliers
+\oddsidemargin=-0.1in %xx
+\evensidemargin=-0.1in
+\textwidth=6.1in
+\topmargin=-0.5in
+\textheight=8.7in
+\lstset{framexleftmargin=0mm, frame=shadowbox , rulesepcolor=\color{blue},commentstyle=\itshape\color{blue},
+tabsize=1,breaklines=true,showspaces=false,extendedchars=true,title=\lstname,
+morekeywords={*,if, for , in , range , else , elif , def , class , import},
+numbers=left
+}
+%
+%Quelques macros
+\newcommand{\moncode}[1]{\lstinputlisting[inputencoding=utf8/latin1,language=Python,]{#1}}
+
+\newcommand{\monimage}[4]{
+\par\noindent
+\begin{figure}[H] %on ouvre l'environnement figure
+\begin{center}
+\includegraphics[width=#4cm]{#1} %ou image.png, .jpeg etc.
+\caption{#2} %la légende
+\label{#3} %l'étiquette pour faire référence à cette image
+\end{center}
+\end{figure} %on ferme l'environnement figure
+}
+
+\newcommand{\ml}[0]{\par\noindent}
+
+%\hyphenation{supplémentaires}{sup-pl\'e-men-tai-res}
+%opening
+\title{Le démineur}
+\author{Wissame Mekhilef\date{\today}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Cet article rend compte du déroulement du projet en Informatique et Sciences du
+Numérique. Il est ici question de développer
+le code du célèbre jeu qu'est le démineur. Ce projet a débuté en fin d'année
+2012 pour se terminer le 6 mai 2013. Il repose sur une modélisation
+UML\footnote{UML: Unified Modeling language} du jeu et d'une programmation avec
+Python 3\footnote{Python est un langage de programmation objet, interprété,
+multi-paradigme, et multi-plateformes. Il favorise la programmation impérative
+structurée et orientée objet. Il est doté d'un typage dynamique fort, d'une
+gestion automatique de la mémoire par ramasse-miettes et d'un système de gestion
+d'exceptions ; il est ainsi similaire à Perl, Ruby, Scheme, Smalltalk et
+Tcl. Source: http://fr.wikipedia.org/wiki/Python\_langage}. 
+\ml
+Je vous souhaite une bonne lecture de ce compte-rendu. 
+\end{abstract}
+
+\newpage
+
+\section{Introduction}
+
+\subsection{Le jeu du démineur: concept}
+Le jeu du démineur est un jeu inventé par Microsoft\footnote{Microsoft est une marque déposée de Microsoft Corp. © 2012 Microsoft Corporation. Tous droits réservés.} 
+sur son système d'exploitation Windows\footnote{Windows est une marque déposée de Microsoft Corp. © 2012 Microsoft Corporation. Tous droits réservés.}. Microsoft a inventé
+ce jeu en même temps que le concept. Il a été largement repris depuis sur de nombreuses platformes telles que mac et linux mais aussi sur des plateformes mobiles.
+Le concept de ce jeu est de découvrir des mines placées sur une grille (qui peut être en 2D ou en 3D). Les informations utilisées sont relatives au voisinage des cellules de la grille selectionnées. Soient elles sont minées, sinon, une information sur son vosinage immédiat est donnée.
+
+\subsection{Le jeu du démineur: règles}
+Les règles de ce jeu sont relativement simples. Au début du jeu, en cliquant sur
+une case (au hasard) deux possibilités se présentent:
+soit la cellule contient une mine auquel cas le jeu est fini, sinon une
+information est donnée sur le voisinage. Cette information prend la forme d'un
+nombre. Si ce nombre est $x$ celà signifie qu'au voisinage de cette case, il
+existe $x$ mines. En utilisant ces informations, le joueur doit déduire d'une façon logique les cases ou cellules ``libres''.
+le jeu consiste donc à libérer les zones non minées et pacifier ainsi le ``terrain''.
+
+\subsection{Le cahier des charges}
+Le cahier des charges de ce projet est constitué de plusieurs items:
+
+\begin{enumerate}
+ \item Pouvoir choisir le nombre de mines totales
+ \item Pouvoir choisir le nombre de cases du tableau
+ \item Connaître le nombre de mines qui touchent la case delectionnée (ou touchée)
+ \item Faire un ``balayage'' jusqu'à trouver une mine autour
+ \item Connaître le nombre de mines restantes
+ \item Connaître la durée de la partie (Choronomètre)
+ \item Tableau des scores avec nom (Liste)
+ \item Pouvoir marquer les mines d'un drapeau
+ \item Conditions d'arrêt : 
+ \begin{itemize}
+  \item Toutes les mines sont marquées
+  \item Une mine est touchée
+  \item Chronomètre inférieur à une durée définie
+ \end{itemize}
+\end{enumerate}
+\section{La gestion de projet}
+
+Ce projet a été organisé grâce à l'utilisation d'outils logiciels tels que Dropbox mais aussi grâce à des méthodes de gestion
+de projets professionnelles que sont le diagramme de GANTT ou encore le diagramme de PERT.
+\subsection{Le diagramme de Gantt}
+Le diagramme de Gantt m'a été utile pour avoir une vue globale du projet. Il m'a aussi permis d'avoir une appréciation 
+plus réelle concernant la durée de développement et l'enchainement des tâches. 
+En retour, il permet de contrôler en cours de processus et en fin de projet les temps de développement nécessaires pour pouvoir corriger et
+se concentrer sur les réponses à donner au cahier des charges.
+
+\monimage{GANTTdiagramme.png}{Le diagramme de GANTT}{GANTT}{15}
+\subsection{Le diagramme PERT}
+Ce diagramme va de paire avec le premier et donne une vue plus globale sur les liens qu'ont les différentes tâches dans
+le projet.
+\monimage{PERTdiagramme.png}{Le digramme PERT}{PERT}{13}
+
+\subsection{Récapitulatif des tâches}
+\subsubsection{Recherches préliminaires}
+\begin{description}
+ \item[Comprendre les règles du démineur] : Cette tâche a été la première, elle
+comprend aussi bien la recherche des règles côté utilisateur comme côté algortihme.
+ En effet il fallait identifier qu'elles sont les règles que le programme doit
+utiliser pour le déroulement du jeu ainsi que la gestion des évènements.
+ \item[Apprendre quelques bases de Python] :  Il m'a ensuite fallut apprendre des
+bases supplémentaires aux bases travaillées en cours pour pouvoir traiter
+entre autre de la programmation
+ objet.
+ \item[Recherche d'une base de travail] :  Il m'est venu à l'idée de rechercher
+une base de travail lorsque je me suis rendu compte que l'avancement du projet stagnait,
+et que je ne voyais pas par où  commencer.
+ \end{description}
+\subsubsection{Algorithmique}
+\begin{description}
+ \item [Dévelopemment du premier algorithme] :  Le premier algorithme a donc était tiré d'une base du jeu du Ping.  
+ \item [Comprendre la Programmation Orientée Objet] : Cette étape c'est révélée nécessaire quand j'ai observé pendant les recherches que ce type de programmation
+ était plus simple à mettre en place et se tourne vers l'avenir.
+ \item [Comprendre la Récurcivité] :  La récurcivité est utilisée dans le balayage de la surface de jeu. En effet la fonction ``liberer'' s'appelle elle-même pour pouvoir
+ continuer le balayage après avoir traité les 8 cases adjacentes
+ \item [Comprendre l'utilisation des interfaces graphiques] :  Contrairement à d'autre projets qui ne nécessitent pas une interface graphique le démineur se doit d'en avoir une.
+ \end{description}
+\subsubsection{Programmation}
+\begin{description}
+ \item [Dévelopement du code] :  Le dévelopement du code n'a pas débuté de
+"zéro" car j'avais à disposition le jeu du ping, qu'il a fallut tout d'abord
+comprendre avant de le modifier.
+ Une fois cette étape effectuée j'ai commencé à modifier le code, à créer de
+nouvelles méthodes. Une fois encore l'affichage graphique étant à ma disposition,
+sous la forme d'exemple, il 
+ était plus simple de tester les nouvelles méthodes.
+ \item [Création d'une bibliothèque de test] :  Une fois le corps du programme
+construit d'un point de vue algorithmique, il m'a fallut tester de nouvelles méthodes
+et pour celà créer des petits programmes. A titre d'exemple: 
+le lancement d'une musique d'ambiance durant le jeu. Il fallait
+tester la musique indépendemment pour savoir si la partie de code
+fonctionne avant de l'intégrer au programme.
+ \item [Ajout de fonctionnalités] :  L'ajout de fonctionnalités c'est fait en
+toute fin de développement, je voulais agrémenter le jeu de petites fonctions
+comme sauvegarder une partie et la reprendre plus tard. Mais aussi remplacer les ronds qui matérialisent les mines et les
+polygonnes qui représentent les drapeaux par des images à la manière du démineur
+de Microsoft. 
+ \end{description}
+\subsubsection{Rapport}
+\begin{description}
+ \item [Comprendre \LaTeX] : Je me suis dirigé vers \LaTeX pour écrire le rapport car il permet un affichage plus professionnel du texte et me permettait surtout grâce à l'inclusion de fichiers
+ de pouvoir modifier mes codes sources jusqu'au dernier moment et d'avoir toujours la dernière version de mon code source dans mon rapport. 
+ \ml
+ L'inclusion d'un fichier python tel que vous la voyez en lisant ce document m'a demandé beaucoup de temps, c'etait la première fois que j'incluais un code source python dans un fichier \LaTeX,
+ que j'avais auparavant utilisé pour l'écriture du rapport du TPE de Première S.
+ \item [Ecriture du rapport] :  L'ecriture du rapport à demandé un temps de réflexion pour trouver un enchainement logique des titres.
+ \item [Comprendre comment diviser un code] :  Comprendre comment diviser un code a été nécessaire ; en effet le parcellement en plusieurs sous parties du programme a permis un affichage plus aisé du code.
+ \item [Ajout du code source au document \LaTeX] : L'ajout du code source au document c'est donc fait par inclusion grâce au package \tt{listing}.
+ \end{description}
+
+\section{Concepts et fonctions informatiques nécessaires}
+\subsection{Interface graphique}
+L'interface graphique est à la base du jeu démineur. Il m'a fallu d'abord trouver une base graphique de travail relativement
+semblable à celle du démineur, en effet je ne savais pas par où commencer. Et une fois cette base trouvée qui était celle
+du ping que j'ai pu trouver dans le livre de {\em Swinnen}, j'ai commencé à travailler sur le code pour le comprendre et ensuite le
+modeler pour le besoin du jeu du démineur.
+\ml
+L'interface du ping est très semblable au démineur, car les deux se jouent sur une grille c'est ce qui m'a permis de choisir ce programme
+plutôt qu'un autre pour démarrer. L'avantage que m'a fourni cette interface graphique et qui m'a beaucoup aidé été le fait de pouvoir 
+tester immédiatement mes fonctions qui, n'avaient aucun rapport avec le jeu du ``ping''.
+\ml
+Dans le langage de programmation qu'est Pyhton les interfaces graphiques peuvent être gérées à l'aide du module {\tt tkinter}. Ce module
+fonctionne parfaitement bien avec la programmation orientée objet. C'est ce qui m'a amené à travailler avec ce type de programmation. 
+Celà a donc impliqué un apprentissage de la modéllisation UML et donc la création de classe.
+\subsection{La programmation objet}
+La programmation orientée objet est un des concepts clef de ce projet. Le principe de cette programation est simple il consiste à  traiter 
+le {\bf tout} en tant qu'{\bf objet}.
+\ml
+Un objet appartient à une classe d'objet qui peut elle aussi appartenir à une classe d'objet encore plus large.
+Pour résumer ceci, c'est comme si on disait que {\tt ma chaise de bureau} appartenait à la classe \tt{chaise}, classe qui
+regroupe tous les types de chaises qui puissent exister, et que cette classe {\tt chaise} appartenait elle aussi
+à un ensemble plus large qui serait l'ensemble de classs {\tt mobilier} et qui regrouperait aussi la classe \tt{table}.
+\ml
+Dans le langage de programmation Python pour créer une classe il suffit de faire comme dans le code suivant.
+\moncode{defclass.py}
+Il faut noter que le paramètre {\tt self} que l'on peut voir lors de la méthode constructeur et dans la définition des 
+méthodes de la classe mais aussi dans les attributs de la classe permet de signaler au programme que ce qui suit
+{\tt self} appartient à l'objet.
+\ml
+Maintenant que nous avons définit ce qu'était une classe, on peut créer un objet de cette classe : {\tt Instanciation}.
+Comme on peut le voir en \ref{annexe:un} dans l'objet {\tt Demineur}, pendant la méthode constructeur on crée grâce à :
+\ml
+{\tt self.mbar = MenuBar(self)}
+\ml
+ une instance {\tt mbar} de l'objet {\tt MenuBar} et on fait de même pour les objets \tt{Jeu} et \tt{Affichage}.
+\ml
+Cela peut paraître un peu à part mais au contraire le fait de pouvoir créer des objets comme on le souhaite, de leur attribuer
+des méthodes rend plus facile la création d'une fenêtre de jeu complexe, c'est-à-dire comportant plusieurs cadres indépendants. Cela
+permet de pouvoir gérer de manière indépendante, l'affichage des objets sur le cadre, leur place, et leurs fonctions ainsi que leurs méthodes.
+\ml
+Pour représenter cette programmation il y a les schémas UML. Pour ce projet j'ai utilisé le logiciel DIA\footnote{DIA est un logiciel du monde libre www.dia.org} qui est
+libre. Cette étape m'a permis de réfléchir sur la modélisation du jeu.
+\ml
+\subsection{La récurcivité}
+Le principe de recurcivité est assez simple, c'est une fonction qui s'appelle elle-même. Mais ce principe de récurcivité
+n'est pas accepté par tous les langages de programmation. 
+\ml
+La récurcivité a été necessaire et utilisée ici dans la fonction qui permet de libérer les cases autour de la case traitée quand
+celle-ci n'a pas de mines voisines. 
+\ml 
+\monimage{liberer.png}{Ce que fais la fonction liberer.py}{liberer}{10}
+\subsection{La fonction gagne}
+Cette fonction est essentielle au déroulement du jeu elle n'est pas complexe mais est appellée après chaque ``clic'' sur une case
+par le joueur.
+\ml
+Cette fonction utilise le codage des cases pour vérifier leur état.
+\section{Algorithme}
+\subsection{Algorithme schématisé}
+Ci-dessous vous pouvez voir l'algorithme représenté en UML avec le logiciel DIA. Il n'y a pas de grande boucle de jeu comme il
+pourrait y avoir dans une programmation qui n'est pas orientée objet et une programmation qui ne prend pas en compte la 
+récurcivité.
+\ml
+\monimage{schemademineur.png}{Schéma de l'algorithme}{ALGO}{15}
+\subsection{Algorithme codé en Python 3}
+Le code source du projet figure en \ref{annexe_un}.
+\subsubsection{Outils pour comprendre le code}
+Tout d'abord je tiens à signaler qu'il faut pour que le jeu commence dans de bonnes conditions utiliser le bouton restart
+qui va initialiser le codage des mines. Sans cette manipulation le jeu ne tourne pas comme il le devrait.
+\ml
+Pour ce projet j'ai choisis de mettre en place un codage pour mes cases celà m'a permis de pouvoir les traiter et celà
+de plusieurs manières.
+\ml
+Le premier codage correspond à l'état des cases comme le montre le tableau ci-dessous.
+\monimage{etat.png}{Tableau récapitulatif du codage de l'état des cases}{etat}{10}
+\ml
+Le deuxième permet d'afficher le nombre de mines adjacentes mais est aussi utile lors de l'utilisation de la fonction {\tt gagne}
+qui a besoin de savoir entre autre si la case posséde un voisin miné ou non.
+\monimage{code.png}{Tableau récapitulatif du code des cases}{code}{10}
+\ml
+Pour le codage de cet algorithme j'ai choisi de séparer toutes les parties qui composent le projet,
+en effet cela à permis de pouvoir ajouter facilement des méthodes (fonctions) ou objets au projet, mais aussi de permettre
+lors de l'écriture du compte-rendu un affichage plus aisé.
+\section{Conclusions}
+Pour finir j'aimerais aborder un aspect de la mise en relation des différentes fonctions. Elle a posé un seul problème majeur
+qui était due à la programmation orientée objet. Car il fallait porter une grande attention à ce qui était un attribut de l'objet
+de ce qui n'était pas un attribut de l'objet concerné par la méthode. Avec la gestion du codage en tant que tel n'a pas posé de grandes difficultés.
+\ml
+En revanche il manque un arrêt du jeu après que la partie soit perdue ou gagnée, la gestion du clic sur la grille de jeu continue. Et le
+lien entre le chronomètre et la liste des joueurs n'est pas encore établi au moment de l'écriture de ce rapport.
+\ml
+Mais ce projet m'a beaucoup inspiré et donc demandé un certain temps pour que toutes mes fonctions fontionnent comme elle le font.
+Il est vrai qu'il a fallut de la patience mais le résultat n'est pas déplaisant.
+\section*{Resources utilisées}
+\begin{itemize}
+ \item python avec éditeur idle
+ \item geany
+ \item Dia
+ \item \LaTeX (sous kile)
+ \item Dropbox
+ \item Libre Office
+\end{itemize}
+
+\section*{Remerciments}
+Je remercie pour m'avoir assité dans ce projet, Monsieur CHEVALIER\footnote{Professeur de Mathématiques et d'Informatique et Sciences du Numérique au 
+Lycée Alain Fournier à Bourges.}, Monsieur PETIT\footnote{Professeur de Mathématiques et d'Informatique et Sciences du Numérique au 
+Lycée Alain Fournier à Bourges.} et Monsieur MEKHILEF\footnote{Professeur à l'Université d'Orléans.}.
+J'aimerais ajouter, pour rester dans l'esprit du libre, et pour remercier la vaste communauté Python\footnote{Python est une marque déposée Copyright © 1990-2013, Python Software Foundation
+Legal Statements.} et \LaTeX, que les codes sources
+du projet et du rapport son disponibles, sur demande, au travers de Dropbox\footnote{Dropbox est une marque déposée de Dropbox Inc. Copyright Agent
+Dropbox Inc.
+185 Berry Street, Suite 400
+San Francisco, CA 94107
+copyright@dropbox.com}.
+%
+\nocite{*}
+\begin{thebibliography}{100}
+\bibitem{a1}{\bf www.developpez.com}.
+\bibitem{a2}{\bf Gérard Swinenn}. {\it Apprendre à programmer avec Python}
+\end{thebibliography}
+%
+ \newpage
+ \section*{Annexe 1: Le programme en Python{\label{annexe_un}}}
+ \moncode{parametre.py}
+% 
+ \moncode{ProgrammePrincipal.py}
+% 
+ \ml
+ \bf{Objet : } Demineur
+ \par\noindent
+\moncode{Demineur.py}
+\moncode{options.py}
+\moncode{pmines.py}
+\moncode{majColonnes.py}
+\moncode{majLignes.py}
+\moncode{couleur.py}
+\moncode{fond.py}
+\moncode{mode.py}
+\moncode{sauver.py}
+\moncode{ouvrir.py}
+\moncode{reset.py}
+\moncode{principe.py}
+\moncode{aPropos.py}
+
+\ml
+\bf{Objet : } MenuBar
+\moncode{MenuBar.py}
+
+\ml
+\bf{Objet : } Affichage
+\moncode{Affichage.py}
+
+\ml
+\bf{Objet : } Jeu
+\moncode{Jeu.py}[Jeu]
+\moncode{redim.py}[redim]
+\moncode{initGrille.py}
+\moncode{traceMaGrille.py}
+\moncode{clicDroit.py}
+\moncode{clicGauche.py}
+\moncode{liberer.py}
+\moncode{gagne.py}
+\moncode{traceGrille.py}
+
+\newpage
+
+\section*{Annexe 2: Image du Projet{\label{annexe:deux}}}
+\monimage{plantravail.png}{Impression écran de la surface de ttravail du logiciel Geany}{GEANY}{15}
+\monimage{latex.png}{Impression écran de la surface de travail du logiciel Kile}{KILE}{15}
+\monimage{dia.png}{Impression écran de la surface de travail du logiciel Dia}{DIA}{15}
+
+\tableofcontents
+\listoffigures
+\end{document}

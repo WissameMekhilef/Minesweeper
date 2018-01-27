@@ -1,0 +1,154 @@
+::::::::::::::
+xxx
+::::::::::::::
+1# class Application(object):
+2#
+def __init__(self):
+3#
+"""Constructeur de la fenêtre principale"""
+4#
+self.root =Tk()
+5#
+self.root.title('Code des couleurs')
+6#
+self.dessineResistance()
+7#
+Label(self.root, text ="Entrez la valeur de la résistance, en ohms :").\
+8#
+grid(row =2, column =1, columnspan =3)
+9#
+Button(self.root, text ='Montrer', command =self.changeCouleurs).\
+10#
+grid(row =3, column =1)
+11#
+Button(self.root, text ='Quitter', command =self.root.quit).\
+12#
+grid(row =3, column =3)
+13#
+self.entree = Entry(self.root, width =14)
+14#
+self.entree.grid(row =3, column =2)
+15#
+# Code des couleurs pour les valeurs de zéro à neuf :
+16#
+self.cc = ['black','brown','red','orange','yellow',
+17#
+'green','blue','purple','grey','white']
+18#
+self.root.mainloop()
+19#Code des couleurs : un petit projet bien encapsulé
+193
+20#
+def dessineResistance(self):
+21#
+"""Canevas avec un modèle de résistance à trois lignes colorées"""
+22#
+self.can = Canvas(self.root, width=250, height =100, bg ='ivory')
+23#
+self.can.grid(row =1, column =1, columnspan =3, pady =5, padx =5)
+24#
+self.can.create_line(10, 50, 240, 50, width =5)
+# fils
+25#
+self.can.create_rectangle(65, 30, 185, 70, fill ='light grey', width =2)
+26#
+# Dessin des trois lignes colorées (noires au départ) :
+27#
+self.ligne =[]
+# on mémorisera les trois lignes dans 1 liste
+28#
+for x in range(85,150,24):
+29#
+self.ligne.append(self.can.create_rectangle(x,30,x+12,70,
+30#
+fill='black',width=0))
+31#
+32#
+def changeCouleurs(self):
+33#
+"""Affichage des couleurs correspondant à la valeur entrée"""
+34#
+self.v1ch = self.entree.get()
+# cette méthode renvoie une chaîne
+35#
+try:
+36#
+v = float(self.v1ch)
+# conversion en valeur numérique
+37#
+except:
+38#
+err =1
+# erreur : entrée non numérique
+39#
+else:
+40#
+err =0
+41#
+if err ==1 or v < 10 or v > 1e11 :
+42#
+self.signaleErreur()
+# entrée incorrecte ou hors limites
+43#
+else:
+44#
+li =[0]*3
+# liste des 3 codes à afficher
+45#
+logv = int(log10(v))
+# partie entière du logarithme
+46#
+ordgr = 10**logv
+# ordre de grandeur
+47#
+# extraction du premier chiffre significatif :
+48#
+li[0] = int(v/ordgr)
+# partie entière
+49#
+decim = v/ordgr - li[0]
+# partie décimale
+50#
+# extraction du second chiffre significatif :
+51#
+li[1] = int(decim*10 +.5)
+# +.5 pour arrondir correctement
+52#
+# nombre de zéros à accoler aux 2 chiffres significatifs :
+53#
+li[2] = logv -1
+54#
+# Coloration des 3 lignes :
+55#
+for n in range(3):
+56#
+self.can.itemconfigure(self.ligne[n], fill =self.cc[li[n]])
+57#
+58#
+def signaleErreur(self):
+59#
+self.entree.configure(bg ='red')
+# colorer le fond du champ
+60#
+self.root.after(1000, self.videEntree)
+# après 1 seconde, effacer
+61#
+62#
+def videEntree(self):
+63#
+self.entree.configure(bg ='white')
+# rétablir le fond blanc
+64#
+self.entree.delete(0, len(self.v1ch))
+# enlever les car. présents
+65#
+66# # Programme principal :
+67# if __name__ == '__main__':
+68#
+from tkinter import *
+69#
+from math import log10
+# logarithmes en base 10
+70#
+f = Application()
+# instanciation de l'objet application
